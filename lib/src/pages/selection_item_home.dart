@@ -69,7 +69,7 @@ class _SelectionItemHomeWidget extends State<SelectionItemHomeWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Parroquia Macarao',
+                              widget.mapModel.state,
                               style: Theme.of(context).textTheme.headline2!.merge(
                                     TextStyle(
                                       fontSize: 35.0,
@@ -77,9 +77,9 @@ class _SelectionItemHomeWidget extends State<SelectionItemHomeWidget> {
                                   ),
                             ),
                             SizedBox(height: 10.0),
-                            Text("Taras asignadas a la parroquia: 120", style: Theme.of(context).textTheme.headline6),
+                            Text(widget.mapModel.stateCode, style: Theme.of(context).textTheme.headline6),
                             SizedBox(height: 10.0),
-                            Text("Actividades por Gabinete:".toUpperCase(), style: Theme.of(context).textTheme.bodyText2),
+                            Text(widget.mapModel.estado.toUpperCase(), style: Theme.of(context).textTheme.bodyText2),
                             SizedBox(height: 10.0),
                             Row(
                               children: [
