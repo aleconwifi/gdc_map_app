@@ -1,78 +1,78 @@
-import 'package:flutter/material.dart';
+import 'package:gdcflutter/src/pages/selection_item_home.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
+import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-
-late MapShapeSource _mapSource;
-late List <MapModel> _mapData;
-
+  late MapShapeSource _mapSource;
+  late List<MapModel> apData = [
+    MapModel('Sucre', 'PAS', Colors.red.withOpacity(0.5)),
+    MapModel('La Pastora', 'PAS', Colors.red.withOpacity(0.5)),
+    MapModel('Altagracia', 'ALT', Colors.red.withOpacity(0.5)),
+    MapModel('San Bernardino', 'SAN', Colors.red.withOpacity(0.5)),
+  ];
+ 
   @override
-void initState() {
-  _mapData = _getMapData();
-  _mapSource = MapShapeSource.asset(
-    'assets/shape_ale.json',
-    shapeDataField: 'PARROQUIA',
-    dataCount: _mapData.length,
-    primaryValueMapper: (int index) => _mapData[index].state,
-    dataLabelMapper: (int index) => _mapData[index].state,
-    shapeColorValueMapper: (int index) => _mapData[index].color,
-  );
+  void initState() {
+    _mapSource = MapShapeSource.asset(
+      'assets/shape_ale.json',
+      shapeDataField: 'PARROQUIA',
+      dataCount: apData.length,
+      primaryValueMapper: (int index) => apData[index].state,
+      //dataLabelMapper: (int index) => apData[index].state,
+      shapeColorValueMapper: (int index) => apData[index].color,
+    );
 
-  super.initState();
-}
+    super.initState();
+  }
 
   @override
   void dispose() {
-    _mapData.clear();
-    _mapData.clear();
+    apData.clear();
+    apData.clear();
     super.dispose();
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: EdgeInsets.fromLTRB(10, 50, 10, 0),  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SfMaps(
 
-       child:   
-        SfMaps(
-      layers: [
-        MapShapeLayer(
-          source: _mapSource,
-          showDataLabels: true,
-        shapeTooltipBuilder: (BuildContext context, int index){
-          return Padding(padding: EdgeInsets.all(7),
-          child: Text(_mapData[index].state,
-          style: TextStyle(color: Colors.white)),
-          
-          );
-        },
-        tooltipSettings: MapTooltipSettings(color: Colors.red),
+          layers: [
+            MapShapeLayer(
+              source: _mapSource,
+             // showDataLabels: true,
+              
+              tooltipSettings: const MapTooltipSettings(color: Colors.white),
+              color: Colors.red.withOpacity(0.5),
+              shapeTooltipBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: Text(
+                    apData[index].state,
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              },
+              onSelectionChanged: (int i) {
+                 apData.map((e) => e.color = Colors.red.withOpacity(0.5)).toList();
+                apData.elementAt(i).color = Colors.red;
+                 setState(() {});
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SelectionItemHomeWidget(mapModel: apData.elementAt(i), heroTag: UniqueKey().toString())));
+              },
+            ),
+          ],
         ),
-      ],
-    ) ,
-    
-    ),
-  );
-}
-
-  static List<MapModel> _getMapData(){
-    return <MapModel>[
-      MapModel('Sucre', 'PAS', Colors.green),
-      MapModel('La Pastora', 'PAS', Colors.green),
-      MapModel('Altagracia', 'ALT', Colors.green),
-      MapModel('San Bernardino', 'SAN', Colors.green),
-
-
-
-    ];
+      ),
+    );
   }
 }
 
@@ -81,5 +81,4 @@ class MapModel {
   String state;
   String stateCode;
   Color color;
-
 }
